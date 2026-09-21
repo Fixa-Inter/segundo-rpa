@@ -22,12 +22,3 @@ def extract_all():
     }
 
     return dados
-
-
-if __name__ == "__main__":
-    dados = extract_all()
-
-    for tabela, registros in dados.items():
-        print(
-            f"{tabela}: {len(registros)} registros extraídos"
-        )
