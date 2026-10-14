@@ -1,9 +1,11 @@
+# O banco legado mantém a tabela endereco; o destino recebe estes dados em unidade.
 from db import conectar_origem
 
 def extract_enderecos():
     query = """
         SELECT
             id,
+            nome,
             rua,
             bairro,
             complemento,

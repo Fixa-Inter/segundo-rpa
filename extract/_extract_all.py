@@ -14,7 +14,7 @@ def extract_all():
         "instituicoes": extract_instituicoes(),
         "planos": extract_planos(),
         "super_administradores": extract_super_administradores(),
-        "enderecos": extract_enderecos(),
+        "unidades": extract_enderecos(),
         "usuarios": extract_usuarios(),
         "contratos": extract_contratos(),
         "pagamentos": extract_pagamentos(),

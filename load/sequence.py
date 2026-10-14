@@ -16,7 +16,7 @@ def ajustar_sequences(conn):
         "super_admin",
         "instituicao",
         "plano",
-        "endereco",
+        "unidade",
         "usuario",
         "contrato",
         "pagamento",

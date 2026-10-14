@@ -2,7 +2,7 @@ def load_usuarios(conn, usuarios):
     query = """
         INSERT INTO usuario (
             id,
-            endereco_id,
+            unidade_id,
             nome_completo,
             email,
             tipo_acesso,
@@ -15,7 +15,7 @@ def load_usuarios(conn, usuarios):
         )
         VALUES (
             %(id)s,
-            %(endereco_id)s,
+            %(unidade_id)s,
             %(nome_completo)s,
             %(email)s,
             %(tipo_acesso)s,

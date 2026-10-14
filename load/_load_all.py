@@ -5,7 +5,7 @@ from db import conectar_destino
 from load.super_administrador_load import load_super_administradores
 from load.instituicao_load import load_instituicoes
 from load.plano_load import load_planos
-from load.endereco_load import load_enderecos
+from load.unidade_load import load_unidades
 from load.usuario_load import load_usuarios
 from load.contrato_load import load_contratos
 from load.pagamento_load import load_pagamentos
@@ -33,9 +33,9 @@ def load_all(dados_transformados):
                 dados_transformados["planos"]
             )
 
-            load_enderecos(
+            load_unidades(
                 conn,
-                dados_transformados["enderecos"]
+                dados_transformados["unidades"]
             )
 
             load_usuarios(

@@ -16,7 +16,7 @@ def transform_usuarios(usuarios):
         usuario_transformado = {
             "id": usuario["id"],
 
-            "endereco_id":
+            "unidade_id":
                 usuario["fk_endereco_id"],
 
             "nome_completo":

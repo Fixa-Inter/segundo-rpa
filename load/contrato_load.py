@@ -3,7 +3,7 @@ def load_contratos(conn, contratos):
         INSERT INTO contrato (
             id,
             plano_id,
-            endereco_id,
+            unidade_id,
             data_inicio,
             data_fim,
             status,
@@ -12,7 +12,7 @@ def load_contratos(conn, contratos):
         VALUES (
             %(id)s,
             %(plano_id)s,
-            %(endereco_id)s,
+            %(unidade_id)s,
             %(data_inicio)s,
             %(data_fim)s,
             %(status)s,
