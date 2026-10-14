@@ -1,5 +1,5 @@
 from transform.instituicao_transform import transform_instituicoes
-from transform.endereco_transform import transform_enderecos
+from transform.unidade_transform import transform_unidades
 from transform.plano_transform import transform_planos
 from transform.super_administrador_transform import transform_super_administradores
 from transform.usuario_transform import transform_usuarios
@@ -11,7 +11,7 @@ from transform.foto_usuario_transform import transform_fotos_usuario
 def transform_all(dados_extraidos):
     dados_transformados = {
         "instituicoes": transform_instituicoes(dados_extraidos["instituicoes"]),
-        "enderecos": transform_enderecos(dados_extraidos["enderecos"]),
+        "unidades": transform_unidades(dados_extraidos["unidades"]),
         "planos": transform_planos(dados_extraidos["planos"]),
         "super_administradores": transform_super_administradores(
             dados_extraidos["super_administradores"]

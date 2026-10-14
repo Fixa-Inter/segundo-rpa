@@ -1,8 +1,9 @@
-def load_enderecos(conn, enderecos):
+def load_unidades(conn, unidades):
     query = """
-        INSERT INTO endereco (
+        INSERT INTO unidade (
             id,
             instituicao_id,
+            nome,
             cnpj,
             logradouro,
             numero,
@@ -16,6 +17,7 @@ def load_enderecos(conn, enderecos):
         VALUES (
             %(id)s,
             %(instituicao_id)s,
+            %(nome)s,
             %(cnpj)s,
             %(logradouro)s,
             %(numero)s,
@@ -29,4 +31,4 @@ def load_enderecos(conn, enderecos):
     """
 
     with conn.cursor() as cursor:
-        cursor.executemany(query, enderecos)
+        cursor.executemany(query, unidades)

@@ -25,7 +25,7 @@ def transform_contratos(contratos):
             "plano_id":
                 contrato["fk_plano_id"],
 
-            "endereco_id":
+            "unidade_id":
                 contrato["fk_endereco_id"],
 
             "data_inicio":
