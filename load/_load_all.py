@@ -1,61 +1,20 @@
-from contextlib import closing
-
-from db import conectar_destino
-
-from load.super_administrador_load import load_super_administradores
-from load.instituicao_load import load_instituicoes
-from load.plano_load import load_planos
-from load.unidade_load import load_unidades
-from load.usuario_load import load_usuarios
-from load.contrato_load import load_contratos
-from load.pagamento_load import load_pagamentos
-from load.foto_usuario_load import load_fotos_usuario
-from load.sequence import ajustar_sequences
+from load.validacao import TABELAS_MIGRADAS
+from load.correspondencia import remapear_vinculos
 
 
-def load_all(dados_transformados):
-    conn = conectar_destino()
-
-    with closing(conn):
-        with conn:
-            load_super_administradores(
-                conn,
-                dados_transformados["super_administradores"]
-            )
-
-            load_instituicoes(
-                conn,
-                dados_transformados["instituicoes"]
-            )
-
-            load_planos(
-                conn,
-                dados_transformados["planos"]
-            )
-
-            load_unidades(
-                conn,
-                dados_transformados["unidades"]
-            )
-
-            load_usuarios(
-                conn,
-                dados_transformados["usuarios"]
-            )
-
-            load_contratos(
-                conn,
-                dados_transformados["contratos"]
-            )
-
-            load_pagamentos(
-                conn,
-                dados_transformados["pagamentos"]
-            )
-
-            load_fotos_usuario(
-                conn,
-                dados_transformados["fotos_usuario"]
-            )
-
-            ajustar_sequences(conn)
+def load_all(controle, dados_transformados, mapas):
+    """Concilia ou insere, registrando os vínculos na mesma transação."""
+    totais = {grupo: {"inseridos": 0, "conciliados": 0} for grupo in TABELAS_MIGRADAS}
+    for grupo in TABELAS_MIGRADAS:
+        for registro in dados_transformados[grupo]:
+            convertido = remapear_vinculos(grupo, registro, mapas)
+            destino = controle.localizar(grupo, convertido)
+            if destino is None:
+                destino = controle.inserir(grupo, convertido)
+                totais[grupo]["inseridos"] += 1
+            else:
+                totais[grupo]["conciliados"] += 1
+            controle.registrar(grupo, registro["id"], destino)
+            mapas[grupo][registro["id"]] = destino
+    controle.verificar()
+    return totais

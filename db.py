@@ -1,24 +1,16 @@
 import psycopg2
-from config import db1ano_config, db2ano_config 
+from config import db1ano_config, db2ano_config
+
 
 def conectar_origem():
-    try: 
-        conn = psycopg2.connect(**db1ano_config)
-        return conn
-    except psycopg2.Error as e:
-        print(f"Error connecting to origin database: {e}")
-        return None
-    finally:
-        if conn:
-            conn.close()
+    try:
+        return psycopg2.connect(**db1ano_config)
+    except psycopg2.Error:
+        raise ConnectionError("Não foi possível conectar ao banco de origem.") from None
+
 
 def conectar_destino():
     try:
-        conn = psycopg2.connect(**db2ano_config)
-        return conn
-    except psycopg2.Error as e:
-        print(f"Error connecting to destination database: {e}")
-        return None
-    finally:
-        if conn:
-            conn.close()
+        return psycopg2.connect(**db2ano_config)
+    except psycopg2.Error:
+        raise ConnectionError("Não foi possível conectar ao banco de destino.") from None
