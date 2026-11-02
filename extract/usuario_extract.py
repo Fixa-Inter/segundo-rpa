@@ -14,9 +14,8 @@ def extract_usuarios():
             email,
             data_criacao,
             cargo,
-            tipo_de_acesso,
+            tipo_acesso,
             fk_endereco_id,
-            gerente_id,
             data_nascimento,
             primeiro_acesso
         FROM usuario
