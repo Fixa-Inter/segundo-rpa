@@ -37,6 +37,14 @@ O RPA não inventa dados para preencher campos obrigatórios nem copia a senha d
 
 Cada execução gera Markdown e JSON com resultado, duração, extraídos, já mapeados, candidatos, conciliados e inseridos confirmados por grupo. Casos ambíguos mostram grupo, ID do legado, até dois IDs candidatos e o motivo, sem nomes, e-mails, hashes ou linhas completas do banco.
 
+Cada execução tem sua própria pasta, mantida dentro do artifact:
+
+```text
+relatorio-rpa-<execucao>-<tentativa>/
+├── relatorio.md
+└── relatorio.json
+```
+
 Os arquivos ficam em **Actions → Sincronizar RPA → execução → Artifacts**. Não usamos outro repositório nem `REPORTS_TOKEN`; o Actions usa seu token automático.
 
 Cada artifact tem retenção de **1 dia** (`retention-days: 1`) e expira após esse prazo, contado a partir do seu envio. O GitHub faz a limpeza; não usamos script de exclusão nem permissão `Actions: write`. Não é uma limpeza única de todos os relatórios em um horário fixo. [Retenção](https://github.com/actions/upload-artifact#retention-period).
@@ -60,7 +68,7 @@ python -m pip install -r requirements.txt
 python main.py
 ```
 
-Localmente, os relatórios ficam em `.rpa_reports/`, fora do versionamento.
+Localmente, cada pasta fica dentro de `.rpa_reports/`, fora do versionamento; execuções locais usam um identificador único.
 
 ## Testes
 

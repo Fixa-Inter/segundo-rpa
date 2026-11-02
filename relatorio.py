@@ -19,10 +19,10 @@ class Relatorio:
         identificador = os.getenv("GITHUB_RUN_ID", uuid.uuid4().hex)
         tentativa = os.getenv("GITHUB_RUN_ATTEMPT", "1")
         self.arquivo = Path(arquivo or os.getenv(
-            "RPA_REPORT_FILE", f".rpa_reports/{identificador}-{tentativa}.json"))
+            "RPA_REPORT_FILE", f".rpa_reports/relatorio-rpa-{identificador}-{tentativa}/relatorio.json"))
         repo = os.getenv("GITHUB_REPOSITORY", "local")
         self.dados = {
-            "versao": 2, "id": self.arquivo.stem, "repositorio_origem": repo,
+            "versao": 2, "id": f"{identificador}-{tentativa}", "repositorio_origem": repo,
             "inicio_utc": agora(), "fim_utc": None, "duracao_segundos": None,
             "status": "iniciada", "etapa": "preparacao", "transacao": "nao_iniciada",
             "workflow_url": (f"https://github.com/{repo}/actions/runs/{identificador}"

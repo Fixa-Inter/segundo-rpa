@@ -8,7 +8,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("acao", choices=("iniciar", "finalizar"))
     args = parser.parse_args()
-    arquivo = os.getenv("RPA_REPORT_FILE", ".rpa_reports/workflow.json")
+    arquivo = os.getenv("RPA_REPORT_FILE", ".rpa_reports/workflow/relatorio.json")
     if args.acao == "iniciar":
         Relatorio(arquivo).etapa("workflow_preparacao")
     else:
