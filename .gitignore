@@ -2,3 +2,5 @@
 .env
 __pycache__/
 *.pyc
+# Relatórios locais são anexados ao workflow como artifacts.
+.rpa_reports/
