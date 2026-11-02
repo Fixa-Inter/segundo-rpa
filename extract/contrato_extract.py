@@ -12,7 +12,7 @@ def extract_contratos():
             data_vencimento,
             fk_plano_id,
             fk_endereco_id,
-            status,
+            status_contrato AS status,
             data_criacao
         FROM contrato
         ORDER BY id;

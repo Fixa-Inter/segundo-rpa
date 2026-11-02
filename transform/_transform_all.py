@@ -1,3 +1,4 @@
+from transform.validacao import validar_origem, validar_destino
 from transform.instituicao_transform import transform_instituicoes
 from transform.unidade_transform import transform_unidades
 from transform.plano_transform import transform_planos
@@ -8,7 +9,8 @@ from transform.pagamento_transform import transform_pagamentos
 from transform.foto_usuario_transform import transform_fotos_usuario
 
 
-def transform_all(dados_extraidos):
+def transform_all(dados_extraidos, ids_existentes=None):
+    validar_origem(dados_extraidos)
     dados_transformados = {
         "instituicoes": transform_instituicoes(dados_extraidos["instituicoes"]),
         "unidades": transform_unidades(dados_extraidos["unidades"]),
@@ -22,4 +24,5 @@ def transform_all(dados_extraidos):
         "fotos_usuario": transform_fotos_usuario(dados_extraidos["fotos_usuario"])
     }
 
+    validar_destino(dados_transformados, ids_existentes)
     return dados_transformados

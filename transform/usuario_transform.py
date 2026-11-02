@@ -6,11 +6,11 @@ def transform_usuarios(usuarios):
 
     for usuario in usuarios:
 
-        if usuario["tipo_de_acesso"] not in tipos_acesso_validos:
+        if usuario["tipo_acesso"] not in tipos_acesso_validos:
             raise ValueError(
                 f"Tipo de acesso inválido no usuário "
                 f"{usuario['id']}: "
-                f"{usuario['tipo_de_acesso']}"
+                f"{usuario['tipo_acesso']}"
             )
 
         usuario_transformado = {
@@ -25,7 +25,7 @@ def transform_usuarios(usuarios):
             "email": usuario["email"],
 
             "tipo_acesso":
-                usuario["tipo_de_acesso"],
+                usuario["tipo_acesso"],
 
             "senha_hash": usuario["senha_hash"],
             "cargo": usuario["cargo"],
