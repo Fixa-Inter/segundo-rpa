@@ -1,0 +1,96 @@
+name: Sincronizar RPA
+
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rpa-sincronizacao
+  cancel-in-progress: false
+
+jobs:
+  sincronizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: rpa_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rpa_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      RPA_REPORT_FILE: .rpa_reports/${{ github.run_id }}-${{ github.run_attempt }}.json
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Iniciar relatório da execução
+        run: python -m scripts.relatorio_workflow iniciar
+
+      - name: Configurar Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependências
+        run: python -m pip install -r requirements.txt
+
+      - name: Executar testes
+        env:
+          RPA_TEST_DSN: postgresql://postgres:postgres@localhost:5432/rpa_test
+        run: python -B -m unittest discover -s tests -v
+
+      - name: Sincronizar novos registros
+        env:
+          LEGADO_HOST: ${{ secrets.LEGADO_HOST }}
+          LEGADO_PORT: ${{ secrets.LEGADO_PORT }}
+          LEGADO_NAME: ${{ secrets.LEGADO_NAME }}
+          LEGADO_USER: ${{ secrets.LEGADO_USER }}
+          LEGADO_PASS: ${{ secrets.LEGADO_PASS }}
+          NORM_HOST: ${{ secrets.NORM_HOST }}
+          NORM_PORT: ${{ secrets.NORM_PORT }}
+          NORM_NAME: ${{ secrets.NORM_NAME }}
+          NORM_USER: ${{ secrets.NORM_USER }}
+          NORM_PASS: ${{ secrets.NORM_PASS }}
+          PYTHONUNBUFFERED: "1"
+        run: |
+          python - <<'PY'
+          import os
+          campos = [f"{prefixo}_{campo}" for prefixo in ("LEGADO", "NORM")
+                    for campo in ("HOST", "PORT", "NAME", "USER", "PASS")]
+          faltantes = [campo for campo in campos if not os.environ.get(campo)]
+          if faltantes:
+              raise SystemExit("Secrets ausentes: " + ", ".join(faltantes))
+          PY
+          python main.py
+
+      - name: Finalizar relatório mesmo em caso de falha
+        if: always()
+        env:
+          RPA_WORKFLOW_RESULT: ${{ job.status }}
+        run: python -m scripts.relatorio_workflow finalizar
+
+      - name: Salvar relatório como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-rpa-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .rpa_reports/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
